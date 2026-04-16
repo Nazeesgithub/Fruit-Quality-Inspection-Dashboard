@@ -12,6 +12,12 @@
 
 ## 2. Deploy Streamlit App (Frontend)
 
+Before deploying, ensure `runtime.txt` exists in repo root with:
+
+```text
+python-3.11
+```
+
 1. Open Streamlit Community Cloud.
 2. Click **New app**.
 3. Select your repo and branch.
