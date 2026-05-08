@@ -10,7 +10,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from inference import FruitClassifier
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from inference import FruitClassifier
 
 
 st.set_page_config(page_title="Fruit Classifier", page_icon="🍎", layout="wide")
@@ -176,6 +179,17 @@ def decode_overlay_png_base64(payload: str) -> np.ndarray:
 
 def run_prediction(clf: FruitClassifier, image_bgr: np.ndarray, threshold: float) -> dict:
     return clf.predict(image_bgr, unknown_threshold=threshold)
+
+
+@st.cache_resource(show_spinner=False)
+def get_local_classifier() -> "FruitClassifier":
+    from inference import FruitClassifier
+
+    for model_path in MODEL_CANDIDATES:
+        if os.path.exists(model_path) and os.path.exists(LABELS_PATH):
+            return FruitClassifier(model_path=model_path, labels_path=LABELS_PATH)
+
+    raise FileNotFoundError("No trained local model was found in the models/ directory.")
 
 
 def run_prediction_via_api(api_url: str, image_bgr: np.ndarray, threshold: float) -> dict:
@@ -367,7 +381,7 @@ def main():
         st.warning("Model not found. Train first: python train_classifier.py")
         st.stop()
 
-    clf = FruitClassifier(model_path=model_path, labels_path=LABELS_PATH)
+    clf = get_local_classifier()
     sample_map = load_sample_images()
     hist = read_history()
     class_labels = [clf.idx_to_label[i] for i in sorted(clf.idx_to_label)]

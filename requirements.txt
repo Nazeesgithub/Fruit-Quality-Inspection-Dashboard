@@ -1,9 +1,8 @@
-numpy==1.24.3
-opencv-python-headless==4.8.1.78
-matplotlib==3.7.2
-pandas==2.0.3
-streamlit==1.28.1
-tensorflow-cpu==2.13.0
-seaborn==0.12.2
-requests==2.31.0
-Pillow==10.0.0
+numpy>=2.2.0
+opencv-python-headless>=4.11.0.86
+matplotlib>=3.10.0
+pandas>=2.2.3
+streamlit>=1.45.0
+seaborn>=0.13.2
+requests>=2.32.3
+Pillow>=11.0.0
