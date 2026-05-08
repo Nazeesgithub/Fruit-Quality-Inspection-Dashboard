@@ -15,8 +15,11 @@
 Before deploying, ensure `runtime.txt` exists in repo root with:
 
 ```text
-python-3.11
+python-3.10
 ```
+
+For Streamlit Cloud, keep frontend dependencies in `requirements.txt` only.
+Backend API dependencies are separated in `requirements-api.txt`.
 
 1. Open Streamlit Community Cloud.
 2. Click **New app**.
@@ -32,6 +35,7 @@ For Streamlit Cloud, your API must be public (Render/Railway/Fly.io/your VPS).
 Suggested backend start command:
 
 ```bash
+pip install -r requirements-api.txt
 uvicorn api_service:app --host 0.0.0.0 --port 8000
 ```
 

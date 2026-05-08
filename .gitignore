@@ -1,0 +1,4 @@
+uploads/
+readme.tct
+__pycache__/
+.streamlit/config.toml
