@@ -4,7 +4,6 @@ from typing import Dict, Tuple
 
 import cv2
 import numpy as np
-import tensorflow as tf
 
 from segmentation_utils import preprocess_for_classifier
 
@@ -18,6 +17,14 @@ DEFAULT_MARGIN_THRESHOLD = 0.05
 
 class FruitClassifier:
     def __init__(self, model_path: str = DEFAULT_MODEL_PATH, labels_path: str = DEFAULT_LABELS_PATH):
+        try:
+            import tensorflow as tf
+        except Exception as exc:
+            raise ImportError(
+                "TensorFlow is required to load the local model.\n"
+                "If you are running the Streamlit frontend, either enable the API backend mode or install TensorFlow in your environment."
+            ) from exc
+
         self.model = tf.keras.models.load_model(model_path)
         with open(labels_path, "r", encoding="utf-8") as f:
             self.idx_to_label = json.load(f)
