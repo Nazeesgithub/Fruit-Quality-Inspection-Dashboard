@@ -1,12 +1,24 @@
 import cv2
 import numpy as np
-from scipy import ndimage
+try:
+    from scipy import ndimage
+except Exception:
+    ndimage = None
 from sklearn.cluster import KMeans
 
 
 def keep_largest_component(mask: np.ndarray) -> np.ndarray:
-    labels, n = ndimage.label(mask)
-    if n == 0:
+    if ndimage is not None:
+        labels, n = ndimage.label(mask)
+        if n == 0:
+            return mask
+        counts = np.bincount(labels.ravel())
+        counts[0] = 0
+        largest = counts.argmax()
+        return (labels == largest).astype(np.uint8)
+    # Fallback: use OpenCV connectedComponents
+    num_labels, labels = cv2.connectedComponents(mask.astype(np.uint8))
+    if num_labels <= 1:
         return mask
     counts = np.bincount(labels.ravel())
     counts[0] = 0
