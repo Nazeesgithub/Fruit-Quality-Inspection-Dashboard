@@ -1,0 +1,46 @@
+# Fly.io configuration for Fruit Quality Inspection Dashboard
+app = "fruit-quality-inspection"
+
+primary_region = "iad"
+
+[build]
+  builder = "paketobuildpacks"
+  buildpacks = ["gcr.io/buildpacks/python"]
+
+[env]
+  PORT = "8501"
+
+[[services]]
+  internal_port = 8501
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "5s"
+    interval = "15s"
+    timeout = "2s"
+
+[checks]
+  [checks.release]
+    type = "release"
+    entrypoint = "release_cmd.sh"
+    cmd = "true"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024
