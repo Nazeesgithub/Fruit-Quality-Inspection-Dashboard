@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import csv
 import base64
 import glob
